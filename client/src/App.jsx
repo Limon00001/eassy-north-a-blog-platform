@@ -9,6 +9,7 @@
 import { Route, Routes } from 'react-router-dom';
 
 // Internal Imports
+import Login from './components/admin/Login.jsx';
 import Blog from './pages/Blog.jsx';
 import Home from './pages/Home.jsx';
 import AddBlog from './pages/admin/AddBlog.jsx';
@@ -24,7 +25,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/blog/:id" element={<Blog />} />
-        <Route path="/admin" element={<Layout />}>
+        <Route path="/admin" element={true ? <Layout /> : <Login />}>
           <Route index element={<Dashboard />} />
           <Route path="addblog" element={<AddBlog />} />
           <Route path="listblog" element={<ListBlog />} />
