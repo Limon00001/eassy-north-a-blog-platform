@@ -5,8 +5,15 @@
  * @copyright 2025 monayem_hossain_limon
  */
 
+// Internal Imports
+import Navbar from '../components/Navbar';
+
 const Home = () => {
-  return <div>Home</div>;
+  return (
+    <>
+      <Navbar />
+    </>
+  );
 };
 
 // Export
