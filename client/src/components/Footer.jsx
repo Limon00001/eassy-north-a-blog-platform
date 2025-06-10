@@ -11,6 +11,7 @@ const Footer = () => {
   return (
     <footer className="px-6 md:px-16 lg:px-24 xl:px-32 bg-primary/3">
       <div className="flex flex-col md:flex-row justify-between items-center gap-10 py-10 border-b border-gray-500/30 text-gray-500">
+        {/* Company Info */}
         <div className="flex flex-col items-center md:items-start">
           <div className="flex items-center gap-2">
             <img src={assets.logo} alt="Logo" className="w-9 md:w-10" />
@@ -23,6 +24,7 @@ const Footer = () => {
           </p>
         </div>
 
+        {/* Quick Links & Other Links */}
         <div className="flex flex-wrap justify-between w-full md:w-[45%] gap-5">
           {footer_data.map((section, index) => (
             <div key={index}>
@@ -41,6 +43,8 @@ const Footer = () => {
             </div>
           ))}
         </div>
+
+        {/* Copyright Text */}
       </div>
       <p className="p-4 text-center text-sm md:text-base text-gray-500/80">
         Copyright 2025 &copy; Monayem Hossain Limon - All Rights Reserved.
