@@ -5,9 +5,23 @@
  * @copyright 2025 monayem_hossain_limon
  */
 
+// External Imports
+import { Route, Routes } from 'react-router-dom';
+
+// Internal Imports
+import Blog from './pages/Blog.jsx';
+import Home from './pages/Home.jsx';
+
 // App Component
 const App = () => {
-  return <div></div>;
+  return (
+    <div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/blog" element={<Blog />} />
+      </Routes>
+    </div>
+  );
 };
 
 // Export
