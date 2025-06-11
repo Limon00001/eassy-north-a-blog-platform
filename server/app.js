@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/', testRouter);
-app.use('/admin', adminRouter);
+app.use('/api/admin', adminRouter);
 
 // Export
 export default app;
