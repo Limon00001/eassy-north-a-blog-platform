@@ -9,13 +9,26 @@
 import express from 'express';
 
 // Internal Imports
-import { adminLogin } from '../controllers/adminController.js';
+import {
+  adminLogin,
+  approvedCommentById,
+  deleteCommentById,
+  getAllBlogsAdmin,
+  getAllComments,
+  getDashboard,
+} from '../controllers/adminController.js';
+import auth from '../middlewares/auth.js';
 
 // Router
 const router = express.Router();
 
 // Routes
 router.post('/login', adminLogin);
+router.get('/comments', auth, getAllComments);
+router.get('/blogs', auth, getAllBlogsAdmin);
+router.post('/delete-comment', auth, deleteCommentById);
+router.post('/approve-comment', auth, approvedCommentById);
+router.get('/dashboard', auth, getDashboard);
 
 // Export
 export default router;
