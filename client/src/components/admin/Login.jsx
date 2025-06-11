@@ -14,15 +14,13 @@ const Login = () => {
     password: '',
   });
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormFields({ ...formFields, [name]: value });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let { name } = e.target;
-    let { value } = e.target;
-
-    setFormFields({
-      ...formFields,
-      [name]: value,
-    });
   };
 
   return (
@@ -52,7 +50,7 @@ const Login = () => {
                 placeholder="Enter your email"
                 className="border-b-2 border-gray-300 p-2 outline-none mb-6"
                 value={formFields.email}
-                onChange={handleSubmit}
+                onChange={handleInputChange}
               />
             </div>
             <div className="flex flex-col">
@@ -65,7 +63,7 @@ const Login = () => {
                 placeholder="Enter your password"
                 className="border-b-2 border-gray-300 p-2 outline-none mb-6"
                 value={formFields.password}
-                onChange={handleSubmit}
+                onChange={handleInputChange}
               />
             </div>
             <button
