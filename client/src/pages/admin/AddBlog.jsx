@@ -8,9 +8,11 @@
 // External Imports
 import Quill from 'quill';
 import { useEffect, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
 
 // Internal Imports
 import { assets, blogCategories } from '../../assets/assets';
+import useAppContext from '../../context/useAppContext';
 
 // Constants
 const initialFormState = {
@@ -30,6 +32,8 @@ const AddBlog = () => {
   const editorRef = useRef(null);
   const quillRef = useRef(null);
 
+  const { axios } = useAppContext();
+
   // Handle file cleanup when component unmounts
   useEffect(() => {
     return () => {
@@ -41,7 +45,7 @@ const AddBlog = () => {
   }, [formData.imagePreview]);
 
   const handleInputChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value, type, checked, files } = e.target;
 
     if (name === 'image' && files?.[0]) {
       // Revoke previous URL if it exists
@@ -56,15 +60,56 @@ const AddBlog = () => {
         imagePreview: objectUrl,
       }));
     } else {
+      // Handle checkbox separately
+      const newValue = type === 'checkbox' ? checked : value;
       setFormData((prev) => ({
         ...prev,
-        [name]: value,
+        [name]: newValue,
       }));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    try {
+      setLoading(true);
+
+      const blogData = {
+        title: formData.title.trim(),
+        subTitle: formData.subTitle.trim(),
+        description: quillRef.current.root.innerHTML,
+        category: formData.category,
+        isPublished: Boolean(formData.isPublished),
+      };
+
+      // Create form data
+      const form = new FormData();
+      form.append('blog', JSON.stringify(blogData));
+      form.append('image', formData.image);
+
+      const { data } = await axios.post('/api/blog/add', form, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (data?.success) {
+        setFormData({
+          ...initialFormState,
+          category: formData.category,
+        });
+        quillRef.current.root.innerHTML = '';
+        toast.success('Blog added successfully');
+      } else {
+        toast.error(data?.message || 'Failed to add blog');
+      }
+    } catch (error) {
+      console.error('Error adding blog:', error);
+      toast.error(error?.response?.data?.message || 'Something went wrong');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleGenerateContent = async () => {};
