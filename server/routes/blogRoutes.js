@@ -10,13 +10,14 @@ import express from 'express';
 
 // Internal Imports
 import { addBlog } from '../controllers/blogController.js';
+import auth from '../middlewares/auth.js';
 import upload from '../middlewares/multer.js';
 
 // Router
 const router = express.Router();
 
 // Routes
-router.post('/add', upload.single('image'), addBlog);
+router.post('/add', upload.single('image'), auth, addBlog);
 
 // Export
 export default router;

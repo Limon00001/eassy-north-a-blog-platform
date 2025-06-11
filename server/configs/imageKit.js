@@ -6,7 +6,11 @@
  */
 
 // External Imports
+import dotenv from 'dotenv';
 import ImageKit from 'imagekit';
+
+// Environment Configuration
+dotenv.config();
 
 // ImageKit Configaration
 const imagekit = new ImageKit({

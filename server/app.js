@@ -11,6 +11,7 @@ import express from 'express';
 
 // Internal Imports
 import adminRouter from './routes/adminRoutes.js';
+import blogRouter from './routes/blogRoutes.js';
 import testRouter from './routes/testRoutes.js';
 
 // Express App
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/', testRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/blog', blogRouter);
 
 // Export
 export default app;

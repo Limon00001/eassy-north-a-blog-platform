@@ -9,8 +9,8 @@
 import fs from 'fs';
 
 // Internal Imports
-import imagekit from '../configs/imageKit';
-import Blog from '../models/Blog';
+import imagekit from '../configs/imageKit.js';
+import Blog from '../models/Blog.js';
 
 // Add Blog
 const addBlog = async (req, res, next) => {
