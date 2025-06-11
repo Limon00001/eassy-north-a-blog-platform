@@ -6,6 +6,7 @@
  */
 
 // External Imports
+import { Toaster } from 'react-hot-toast';
 import { Route, Routes } from 'react-router-dom';
 
 // Internal Imports
@@ -25,6 +26,7 @@ import 'quill/dist/quill.snow.css';
 const App = () => {
   return (
     <div>
+      <Toaster position="top-right" reverseOrder={true} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/blog/:id" element={<Blog />} />
