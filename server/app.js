@@ -10,6 +10,7 @@ import cors from 'cors';
 import express from 'express';
 
 // Internal Imports
+import errorHandler from './middlewares/error.js';
 import adminRouter from './routes/adminRoutes.js';
 import blogRouter from './routes/blogRoutes.js';
 import testRouter from './routes/testRoutes.js';
@@ -26,6 +27,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/', testRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/blog', blogRouter);
+
+// Error Handler
+app.use(errorHandler);
 
 // Export
 export default app;
