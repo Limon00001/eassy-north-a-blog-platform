@@ -11,6 +11,7 @@ import fs from 'fs';
 // Internal Imports
 import imagekit from '../configs/imageKit.js';
 import Blog from '../models/Blog.js';
+import getImageKitId from '../utils/getImageKitId.js';
 
 // Add Blog
 const addBlog = async (req, res, next) => {
@@ -69,5 +70,118 @@ const addBlog = async (req, res, next) => {
   }
 };
 
+// Get All Blogs
+const getAllBlogs = async (req, res, next) => {
+  try {
+    // Fetch all blogs
+    const blogs = await Blog.find({ isPublished: true });
+
+    // Response
+    res
+      .status(200)
+      .json({ success: true, message: 'All blogs fetched', blogs });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get Individual Blog By Id
+const getBlogById = async (req, res, next) => {
+  const { blogId } = req.params;
+
+  try {
+    // Fetch blog
+    const blog = await Blog.findById(blogId);
+
+    // Check if blog exists
+    if (!blog) {
+      return res
+        .status(404)
+        .json({ success: false, message: 'Blog not found' });
+    }
+
+    // Response
+    res.status(200).json({ success: true, message: 'Blog fetched', blog });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Delete a Single Blog
+const deleteBlogById = async (req, res, next) => {
+  const { id } = req.body;
+
+  try {
+    // Fetch blog
+    const blog = await Blog.findById(id);
+
+    // Check if blog exists
+    if (!blog) {
+      return res
+        .status(404)
+        .json({ success: false, message: 'Blog not found' });
+    }
+
+    // Delete image from ImageKit
+    if (blog.image) {
+      try {
+        const fileId = getImageKitId(blog.image);
+
+        if (!fileId) {
+          console.warn('No valid ImageKit file ID found');
+          return;
+        } else {
+          try {
+            await imagekit.deleteFile(fileId);
+          } catch (deleteError) {
+            // More detailed error logging
+            console.error('ImageKit deletion error:', {
+              url: blog.image,
+              fileId,
+              error: deleteError.message,
+              details: deleteError.response?.data,
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error in image deletion process:', error);
+      }
+    }
+
+    // Delete blog
+    await Blog.findByIdAndDelete(id);
+
+    // Response
+    res
+      .status(200)
+      .json({ success: true, message: 'Blog deleted successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Toggle Publish Status
+const togglePublish = async (req, res, next) => {
+  const { id } = req.body;
+
+  try {
+    // Fetch blog
+    const blog = await Blog.findById(id);
+
+    // toggle publish status
+    blog.isPublished = !blog.isPublished;
+
+    // Save the blog
+    await blog.save();
+
+    // Response
+    res
+      .status(200)
+      .json({ success: true, message: 'Blog published status updated' });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Export
-export { addBlog };
+export { addBlog, deleteBlogById, getAllBlogs, getBlogById, togglePublish };
