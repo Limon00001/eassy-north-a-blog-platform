@@ -202,7 +202,7 @@ const addComment = async (req, res, next) => {
     // Response
     res
       .status(200)
-      .json({ success: true, message: 'Comment added successfully' });
+      .json({ success: true, message: 'Comment added for review' });
   } catch (error) {
     next(error);
   }
