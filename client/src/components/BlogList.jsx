@@ -13,17 +13,23 @@ import { useState } from 'react';
 import { blogCategories } from '../assets/assets';
 import useAppContext from '../context/useAppContext';
 import BlogCard from './BlogCard';
+import NotFoundBlog from './NotFoundBlog';
 
 const BlogList = () => {
   const [menu, setMenu] = useState('All');
   const { blog, input } = useAppContext();
 
   const filteredBlogs = () => {
+    // Check if blog is undefined or null or empty
+    if (!blog) return [];
+
+    // If no input, return all blogs
     if (input === '') {
       return blog;
     }
 
-    blog.filter((item) => {
+    // Return filtered blogs
+    return blog.filter((item) => {
       return (
         item.title.toLowerCase().includes(input.toLowerCase()) ||
         item.category.toLowerCase().includes(input.toLowerCase())
@@ -31,23 +37,13 @@ const BlogList = () => {
     });
   };
 
+  // Get filtered blogs
+  const blogs = filteredBlogs();
+
   return (
     <div>
-      {filteredBlogs().length === 0 ? (
-        <div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col items-center justify-center min-h-[20vh] px-4"
-        >
-          <h2 className="text-3xl font-bold text-gray-800 mb-2 text-center">
-            No Blogs Found
-          </h2>
-          <p className="text-gray-600 text-center max-w-md mb-6">
-            We couldn't find any blogs matching your search criteria. Try
-            adjusting your filters or search terms.
-          </p>
-        </div>
+      {blogs.length === 0 ? (
+        <NotFoundBlog />
       ) : (
         <div className="flex justify-center gap-4 md:gap-8 my-10 relative">
           {blogCategories.map((category) => (
