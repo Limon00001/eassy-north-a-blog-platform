@@ -5,14 +5,12 @@
  * @copyright 2025 monayem_hossain_limon
  */
 
-// External Imports
-import { useNavigate } from 'react-router-dom';
-
 // Internal Imports
 import { assets } from '../assets/assets';
+import useAppContext from '../context/useAppContext';
 
 const Navbar = () => {
-  const navigate = useNavigate();
+  const { navigate, token } = useAppContext();
 
   return (
     <div className="flex justify-between items-center py-5 mx-8 md:mx-20 xl:mx-32">
@@ -27,7 +25,7 @@ const Navbar = () => {
         onClick={() => navigate('/admin')}
         className="flex items-center gap-2 rounded-full text-sm cursor-pointer py-2.5 px-10 bg-primary text-white"
       >
-        Login
+        {token ? 'Dashboard' : 'Login'}
         <img src={assets.arrow} alt="arrow" className={'w-3'} />
       </button>
     </div>

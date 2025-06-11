@@ -12,6 +12,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 // Internal Imports
 import App from './App.jsx';
+import { AppContextProvider } from './context/AppContext.jsx';
 
 // CSS
 import './index.css';
@@ -20,7 +21,9 @@ import './index.css';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <AppContextProvider>
+        <App />
+      </AppContextProvider>
     </BrowserRouter>
   </StrictMode>,
 );
