@@ -8,13 +8,15 @@
 // External Imports
 import Moment from 'moment';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useParams } from 'react-router-dom';
 
 // Internal Imports
-import { assets, blog_data, comments_data } from '../assets/assets';
+import { assets } from '../assets/assets';
 import Footer from '../components/Footer';
 import Loader from '../components/Loader';
 import Navbar from '../components/Navbar';
+import useAppContext from '../context/useAppContext';
 
 const Blog = () => {
   const [data, setData] = useState(null);
@@ -24,37 +26,56 @@ const Blog = () => {
     comment: '',
   });
   const { id } = useParams();
+  const { axios } = useAppContext();
 
   useEffect(() => {
-    const fetchBlogData = async () => {
+    const fetchData = async () => {
       try {
-        const data = blog_data.find((blog) => blog._id === id);
-        setData(data);
+        const [blogResponse, commentsResponse] = await Promise.all([
+          axios.get(`/api/blog/${id}`),
+          axios.post(`/api/blog/comments`, { blog: id }),
+        ]);
+
+        if (blogResponse.data?.success) {
+          setData(blogResponse.data.blog);
+        }
+
+        if (commentsResponse.data?.success) {
+          setComments(commentsResponse.data.comments);
+        }
       } catch (error) {
-        console.log(error);
+        toast.error(error?.response?.data?.message || 'Failed to load blog');
       }
     };
 
-    const fetchComments = async () => {
-      try {
-        setComments(comments_data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchBlogData();
-    fetchComments();
-  }, [id, comments]);
+    fetchData();
+  }, [id, axios]);
 
   const handleSubmitCommentForm = async (event) => {
     event.preventDefault();
-    let { value } = event.target;
-    let { name } = event.target;
-    setFormDetails({
-      ...formDetails,
-      [name]: value,
-    });
+
+    try {
+      const { data } = await axios.post(`/api/blog/add-comment`, {
+        blog: id,
+        name: formDetails.name,
+        content: formDetails.comment,
+      });
+
+      if (!data?.success) {
+        toast.error(data?.message || 'Something went wrong');
+      } else {
+        setComments(data?.comments);
+        setFormDetails({ name: '', comment: '' });
+        toast.success('Comment added for review');
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || 'Something went wrong');
+    }
+  };
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormDetails({ ...formDetails, [name]: value });
   };
 
   return data ? (
@@ -90,9 +111,11 @@ const Blog = () => {
         ></div>
 
         <div className="mt-14 mb-10 max-w-3xl mx-auto">
-          <p className="font-semibold mb-4">Comments ({comments.length})</p>
+          <p className="font-semibold mb-4">
+            Comments ({comments?.length || 0})
+          </p>
           <div className="flex flex-col gap-4">
-            {comments.map((item, index) => (
+            {comments?.map((item, index) => (
               <div
                 key={index}
                 className="relative bg-primary/2 border border-primary/5 max-w-xl p-4 rounded text-gray-600"
@@ -124,7 +147,7 @@ const Blog = () => {
               requied
               className="w-full p-2 border border-gray-300 rounded outline-none"
               value={formDetails.name}
-              onChange={handleSubmitCommentForm}
+              onChange={handleInputChange}
             />
             <textarea
               name="comment"
@@ -133,7 +156,7 @@ const Blog = () => {
               requied
               className="w-full p-2 border border-gray-300 rounded outline-none h-48"
               value={formDetails.comment}
-              onChange={handleSubmitCommentForm}
+              onChange={handleInputChange}
             />
             <button
               type="submit"
