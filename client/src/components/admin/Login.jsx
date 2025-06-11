@@ -7,8 +7,13 @@
 
 // External Imports
 import { useState } from 'react';
+import toast from 'react-hot-toast';
+
+// Internal Imports
+import useAppContext from '../../context/useAppContext';
 
 const Login = () => {
+  const { axios, setToken } = useAppContext();
   const [formFields, setFormFields] = useState({
     email: '',
     password: '',
@@ -21,6 +26,21 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    try {
+      const { data } = await axios.post('/api/admin/login', formFields);
+
+      if (!data?.success) {
+        toast.error('Login Failed');
+      } else {
+        setToken(data?.token);
+        localStorage.setItem('token', data?.token);
+        axios.defaults.headers.common['Authorization'] = data?.token;
+        toast.success('Login Successful');
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || 'Something went wrong');
+    }
   };
 
   return (

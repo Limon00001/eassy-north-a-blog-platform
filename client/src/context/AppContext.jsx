@@ -26,7 +26,7 @@ const AppContextProvider = ({ children }) => {
 
   const fetchBlogs = async () => {
     try {
-      const { data } = await axios.get('/api/blogs/all');
+      const { data } = await axios.get('/api/blog/all');
 
       if (!data?.success) {
         toast.error(data?.message || 'Something went wrong');
