@@ -5,10 +5,27 @@
  * @copyright 2025 monayem_hossain_limon
  */
 
+// External Imports
+import { useRef } from 'react';
+
 // Internal Imports
 import { assets } from '../assets/assets';
+import useAppContext from '../context/useAppContext';
 
 const Header = () => {
+  const { input, setInput } = useAppContext();
+  const inputRef = useRef();
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    setInput(inputRef?.current?.value);
+  };
+
+  const handleClear = () => {
+    setInput('');
+    inputRef.current.value = '';
+  };
+
   return (
     <div className="mx-8 md:mx-16 relative">
       <div className="text-center mt-20 mb-8">
@@ -25,8 +42,12 @@ const Header = () => {
           platform — effortless blog creation starts here. Focus on your ideas
           while AI handles the writing, empowering every blogger to thrive.
         </p>
-        <form className="flex items-center justify-between max-w-lg max-md:scale-75 mx-auto border border-gray-300 rounded-full bg-white overflow-hidden">
+        <form
+          onSubmit={handleFormSubmit}
+          className="flex items-center justify-between max-w-lg max-md:scale-75 mx-auto border border-gray-300 rounded-full bg-white overflow-hidden"
+        >
           <input
+            ref={inputRef}
             type="text"
             name="search"
             id="search"
@@ -42,6 +63,22 @@ const Header = () => {
           </button>
         </form>
       </div>
+
+      <div className="flex items-center justify-center gap-2 mb-4">
+        {input && <p className="text-sm text-primary">Search: "{input}"</p>}
+      </div>
+
+      <div className="text-center">
+        {input && (
+          <button
+            onClick={handleClear}
+            className="border font-light text-xs py-1 px-3 rounded-sm shadow-custom-sm cursor-pointer"
+          >
+            Clear Search
+          </button>
+        )}
+      </div>
+
       <img
         src={assets.gradientBackground}
         alt="background"
