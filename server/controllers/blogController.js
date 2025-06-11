@@ -11,6 +11,7 @@ import fs from 'fs';
 // Internal Imports
 import imagekit from '../configs/imageKit.js';
 import Blog from '../models/Blog.js';
+import Comment from '../models/Comment.js';
 import getImageKitId from '../utils/getImageKitId.js';
 
 // Add Blog
@@ -151,6 +152,9 @@ const deleteBlogById = async (req, res, next) => {
     // Delete blog
     await Blog.findByIdAndDelete(id);
 
+    // Delete comments associated with the blog
+    await Comment.deleteMany({ blog: id });
+
     // Response
     res
       .status(200)
@@ -183,5 +187,55 @@ const togglePublish = async (req, res, next) => {
   }
 };
 
+// Add Comment
+const addComment = async (req, res, next) => {
+  const { blog, name, content } = req.body;
+
+  try {
+    // Create comment data
+    await Comment.create({
+      blog,
+      name,
+      content,
+    });
+
+    // Response
+    res
+      .status(200)
+      .json({ success: true, message: 'Comment added successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get Individual Blog Comments
+const getBlogComment = async (req, res, next) => {
+  const { blogId } = req.body;
+
+  try {
+    const comments = await Comment.find({
+      blog: blogId,
+      isApproved: true,
+    }).sort({
+      createdAt: -1,
+    });
+
+    // Response
+    res
+      .status(200)
+      .json({ success: true, message: 'Comments fetched', comments });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Export
-export { addBlog, deleteBlogById, getAllBlogs, getBlogById, togglePublish };
+export {
+  addBlog,
+  addComment,
+  deleteBlogById,
+  getAllBlogs,
+  getBlogById,
+  getBlogComment,
+  togglePublish,
+};
