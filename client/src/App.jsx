@@ -18,6 +18,9 @@ import Dashboard from './pages/admin/Dashboard.jsx';
 import Layout from './pages/admin/Layout.jsx';
 import ListBlog from './pages/admin/ListBlog.jsx';
 
+// Quill CSS
+import 'quill/dist/quill.snow.css';
+
 // App Component
 const App = () => {
   return (
