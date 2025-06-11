@@ -11,9 +11,11 @@ import express from 'express';
 // Internal Imports
 import {
   addBlog,
+  addComment,
   deleteBlogById,
   getAllBlogs,
   getBlogById,
+  getBlogComment,
   togglePublish,
 } from '../controllers/blogController.js';
 import auth from '../middlewares/auth.js';
@@ -28,6 +30,8 @@ router.get('/all', getAllBlogs);
 router.get('/:blogId', getBlogById);
 router.post('/delete', auth, deleteBlogById);
 router.post('/toggle-publish', auth, togglePublish);
+router.post('/add-comment', addComment);
+router.post('/comments', getBlogComment);
 
 // Export
 export default router;
