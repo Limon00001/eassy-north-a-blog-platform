@@ -11,14 +11,14 @@
 
 ## Table of Contents
 
-1. [Overview](#overview)
-2. [Technical Stack](#technical-stack)
-3. [Project Structure](#project-structure)
-4. [Features Implementation](#features-implementation)
-5. [Challenges & Solutions](#challenges-and-solutions)
-6. [Eye-Catching Features](#eye-catching-features)
-7. [Work Efficiency Metrics](#work-efficiency-metrics)
-8. [Future Improvements](#future-improvements)
+1. [Overview](#1-overview)
+2. [Technical Stack](#2-technical-stack)
+3. [Project Structure](#3-project-structure)
+4. [Features Implementation](#4-features-implementation)
+5. [Challenges](#5-challenges)
+6. [Eye-Catching Features](#6-eye-catching-features)
+7. [Work Efficiency Metrics](#7-work-efficiency-metrics)
+8. [Future Improvements](#8-future-improvements)
 
 ## 1. Overview
 
