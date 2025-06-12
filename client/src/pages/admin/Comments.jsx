@@ -7,18 +7,32 @@
 
 // External Imports
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 // Internal Imports
-import { comments_data } from '../../assets/assets';
 import CommentTableItem from '../../components/admin/CommentTableItem';
+import useAppContext from '../../context/useAppContext';
 
 // Component
 const Comments = () => {
   const [comments, setComments] = useState([]);
   const [filter, setFilter] = useState('Not Approved');
 
+  const { axios } = useAppContext();
+
   const fetchComments = async () => {
-    setComments(comments_data);
+    try {
+      const { data } = await axios.get('/api/admin/comments');
+
+      if (!data?.success) {
+        toast.error(data?.message || 'Failed to load comments');
+        return;
+      }
+
+      setComments(data?.comments);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || 'Something went wrong');
+    }
   };
 
   useEffect(() => {
