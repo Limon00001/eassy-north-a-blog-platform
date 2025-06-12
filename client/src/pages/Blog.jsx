@@ -33,7 +33,7 @@ const Blog = () => {
       try {
         const [blogResponse, commentsResponse] = await Promise.all([
           axios.get(`/api/blog/${id}`),
-          axios.post(`/api/blog/comments`, { blog: id }),
+          axios.post(`/api/blog/comments`, { blogId: id }),
         ]);
 
         if (blogResponse.data?.success) {
@@ -62,11 +62,26 @@ const Blog = () => {
       });
 
       if (!data?.success) {
-        toast.error(data?.message || 'Something went wrong');
+        toast.error(data?.message || 'Failed to add comment');
       } else {
-        setComments(data?.comments);
-        setFormDetails({ name: '', comment: '' });
-        toast.success('Comment added for review');
+        if (data?.success) {
+          // Clear form
+          setFormDetails({ name: '', comment: '' });
+          toast.success('Comment added for review');
+
+          // Fetch updated comments
+          const { data: commentsData } = await axios.post(
+            `/api/blog/comments`,
+            {
+              blogId: id,
+            },
+          );
+          if (commentsData?.success) {
+            setComments(commentsData.comments);
+          }
+        } else {
+          toast.error(data?.message || 'Failed to add comment');
+        }
       }
     } catch (error) {
       toast.error(error?.response?.data?.message || 'Something went wrong');
