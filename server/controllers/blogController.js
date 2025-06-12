@@ -130,19 +130,12 @@ const deleteBlogById = async (req, res, next) => {
         const fileId = getImageKitId(blog.image);
 
         if (!fileId) {
-          console.warn('No valid ImageKit file ID found');
           return;
         } else {
           try {
             await imagekit.deleteFile(fileId);
           } catch (deleteError) {
-            // More detailed error logging
-            console.error('ImageKit deletion error:', {
-              url: blog.image,
-              fileId,
-              error: deleteError.message,
-              details: deleteError.response?.data,
-            });
+            console.error('Error in image deletion process:', deleteError);
           }
         }
       } catch (error) {
@@ -259,13 +252,7 @@ const generateContent = async (req, res, next) => {
       content,
     });
   } catch (error) {
-    // next(error);
-    console.error('Content generation error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to generate content',
-      error: error.message,
-    });
+    next(error);
   }
 };
 

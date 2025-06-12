@@ -22,7 +22,6 @@ const getImageKitId = (url) => {
 
     return fileId;
   } catch (error) {
-    console.error('Error extracting ImageKit ID:', error);
     return null;
   }
 };

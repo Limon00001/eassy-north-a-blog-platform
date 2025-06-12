@@ -106,7 +106,6 @@ const AddBlog = () => {
         toast.error(data?.message || 'Failed to add blog');
       }
     } catch (error) {
-      console.error('Error adding blog:', error);
       toast.error(error?.response?.data?.message || 'Something went wrong');
     } finally {
       setLoading(false);
@@ -131,7 +130,6 @@ const AddBlog = () => {
         toast.error(data?.message || 'Failed to generate content');
       }
     } catch (error) {
-      console.error('Error generating content:', error);
       toast.error(error?.response?.data?.message || 'Something went wrong');
     } finally {
       setLoading(false);
