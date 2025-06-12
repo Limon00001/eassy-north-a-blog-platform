@@ -19,7 +19,12 @@ import testRouter from './routes/testRoutes.js';
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  }),
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
