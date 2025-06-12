@@ -179,9 +179,7 @@ const togglePublish = async (req, res, next) => {
     await blog.save();
 
     // Response
-    res
-      .status(200)
-      .json({ success: true, message: 'Blog published status updated' });
+    res.status(200).json({ success: true, message: 'Blog status is updated' });
   } catch (error) {
     next(error);
   }
