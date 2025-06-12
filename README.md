@@ -180,6 +180,14 @@ cd server
 pnpm build
 ```
 
+## Credentials
+
+### Admin Access
+```properties
+Email: admin@gmail.com
+Password: admin123
+```
+
 ## Author
 
 **Monayem Hossain Limon**
