@@ -9,6 +9,7 @@
 import fs from 'fs';
 
 // Internal Imports
+import main from '../configs/gemini.js';
 import imagekit from '../configs/imageKit.js';
 import Blog from '../models/Blog.js';
 import Comment from '../models/Comment.js';
@@ -227,11 +228,53 @@ const getBlogComment = async (req, res, next) => {
   }
 };
 
+const generateContent = async (req, res, next) => {
+  const { prompt } = req.body;
+
+  // Check if prompt is provided
+  if (!prompt) {
+    return res.status(400).json({
+      success: false,
+      message: 'Please provide a prompt',
+    });
+  }
+
+  try {
+    // Generate content
+    const content = await main(
+      prompt + ' Generate Content for this topic in simple text format',
+    );
+
+    if (!content) {
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to generate content',
+      });
+    }
+
+    // Response
+    res.status(200).json({
+      success: true,
+      message: 'Content generated successfully',
+      content,
+    });
+  } catch (error) {
+    // next(error);
+    console.error('Content generation error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to generate content',
+      error: error.message,
+    });
+  }
+};
+
 // Export
 export {
   addBlog,
   addComment,
   deleteBlogById,
+  generateContent,
   getAllBlogs,
   getBlogById,
   getBlogComment,

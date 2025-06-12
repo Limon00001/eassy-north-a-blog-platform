@@ -13,6 +13,7 @@ import {
   addBlog,
   addComment,
   deleteBlogById,
+  generateContent,
   getAllBlogs,
   getBlogById,
   getBlogComment,
@@ -32,6 +33,7 @@ router.post('/delete', auth, deleteBlogById);
 router.post('/toggle-publish', auth, togglePublish);
 router.post('/add-comment', addComment);
 router.post('/comments', getBlogComment);
+router.post('/generate', auth, generateContent);
 
 // Export
 export default router;
