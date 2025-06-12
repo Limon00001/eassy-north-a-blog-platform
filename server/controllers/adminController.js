@@ -89,40 +89,31 @@ const getAllComments = async (req, res, next) => {
 
 const getDashboard = async (req, res, next) => {
   try {
-    // Fetch dashboard data from database with limit
+    // Get recent blogs (latest 5)
     const recentBlogs = await Blog.find({}).sort({ createdAt: -1 }).limit(5);
 
-    // Count total number of documents
-    const blogs = await Blog.countDocuments();
+    // Count total published blogs
+    const totalBlogs = await Blog.countDocuments({ isPublished: true });
 
-    // Count total number of comments
-    const comments = await Comment.countDocuments();
+    // Count total approved comments
+    const totalComments = await Comment.countDocuments({ isApproved: true });
 
-    // Count total number of drafts
-    const drafts = await Blog.countDocuments({ isPublished: false });
+    // Count draft (unpublished) blogs
+    const draftBlogs = await Blog.countDocuments({ isPublished: false });
 
-    // Create dashboard data
+    // Create dashboard data object
     const dashboardData = {
       recentBlogs,
-      blogs,
-      comments,
-      drafts,
+      totalBlogs,
+      totalComments,
+      draftBlogs,
     };
-
-    // If dashboard data is not found
-    if (!dashboardData) {
-      return res.status(404).json({
-        success: false,
-        message: 'No dashboard data found',
-      });
-    }
 
     // Response
     res.status(200).json({
       success: true,
-      message: 'Dashboard fetched successfully by admin',
-      blogs,
-      comments,
+      message: 'Dashboard fetched successfully',
+      dashboardData,
     });
   } catch (error) {
     next(error);
