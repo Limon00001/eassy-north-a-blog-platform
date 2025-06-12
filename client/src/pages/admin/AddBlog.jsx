@@ -6,6 +6,7 @@
  */
 
 // External Imports
+import { parse } from 'marked';
 import Quill from 'quill';
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -112,7 +113,30 @@ const AddBlog = () => {
     }
   };
 
-  const handleGenerateContent = async () => {};
+  const handleGenerateContent = async () => {
+    if (!formData.title) return toast.error('Please enter a title');
+
+    try {
+      setLoading(true);
+
+      // Generate content
+      const { data } = await axios.post(`/api/blog/generate`, {
+        prompt: formData.title,
+      });
+
+      // If content is generated successfully
+      if (data?.success) {
+        quillRef.current.root.innerHTML = parse(data?.content);
+      } else {
+        toast.error(data?.message || 'Failed to generate content');
+      }
+    } catch (error) {
+      console.error('Error generating content:', error);
+      toast.error(error?.response?.data?.message || 'Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!quillRef.current && editorRef.current) {
@@ -171,6 +195,14 @@ const AddBlog = () => {
         <p className="mt-4">Blog Description</p>
         <div className="max-w-lg h-74 pb-16 md:pb-10 pt-2 relative">
           <div ref={editorRef}></div>
+
+          {/* Loading indicator for the generate the content */}
+          {loading && (
+            <div className="absolute right-0 top-0 bottom-0 left-0 flex items-center justify-center bg-black/10 mt-2">
+              <div className="w-8 h-8 animate-spin rounded-full border-t-white border-2"></div>
+            </div>
+          )}
+
           <button
             onClick={handleGenerateContent}
             type="button"

@@ -114,7 +114,7 @@ const Blog = () => {
         </h1>
         <h2 className="my-5 max-w-lg truncate mx-auto">{data.subTitle}</h2>
         <p className="inline-block py-1 px-4 rounded-full mb-6 border text-sm border-primary/35 bg-primary/5 text-primary font-medium">
-          Monayem Hossain
+          Admin
         </p>
       </div>
 
