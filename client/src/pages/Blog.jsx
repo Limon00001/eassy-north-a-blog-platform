@@ -51,6 +51,7 @@ const Blog = () => {
     fetchData();
   }, [id, axios]);
 
+  // Function to handle form submission
   const handleSubmitCommentForm = async (event) => {
     event.preventDefault();
 
@@ -88,109 +89,204 @@ const Blog = () => {
     }
   };
 
+  // Function to handle form input changes
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormDetails({ ...formDetails, [name]: value });
   };
 
-  return data ? (
-    <div className="relative">
-      {/* Background */}
-      <img
-        src={assets.gradientBackground}
-        alt=""
-        className="absolute -top-50 -z-1 opacity-50"
-      />
+  // Social media icons
+  const socials = [
+    { icon: assets.facebook_icon, name: 'Facebook' },
+    { icon: assets.twitter_icon, name: 'Twitter' },
+    { icon: assets.googleplus_icon, name: 'Google Plus' },
+  ];
 
-      {/* Navbar */}
+  // Add share functionality
+  const handleShare = async (platform) => {
+    const url = window.location.href;
+    const title = data?.title;
+
+    const shareData = {
+      Facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+      Twitter: `https://twitter.com/intent/tweet?url=${url}&text=${title}`,
+      LinkedIn: `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}`,
+      WhatsApp: `https://api.whatsapp.com/send?text=${title} ${url}`,
+    };
+
+    window.open(shareData[platform], '_blank', 'width=600,height=400');
+  };
+
+  return data ? (
+    <div className="relative min-h-screen">
+      {/* Enhanced gradient background */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
+        <img
+          src={assets.gradientBackground}
+          alt=""
+          className="w-full h-full object-cover opacity-30 blur-3xl"
+        />
+      </div>
+
       <Navbar />
 
-      <div className="text-center mt-20 text-gray-600">
-        <p className="text-primary py-4 font-medium">
-          Published on {Moment(data.createdAt).format('MMMM Do YYYY')}
-        </p>
-        <h1 className="text-2xl md:text-4xl font-semibold max-w-2xl mx-auto text-gray-800">
-          {data.title}
-        </h1>
-        <h2 className="my-5 max-w-lg truncate mx-auto">{data.subTitle}</h2>
-        <p className="inline-block py-1 px-4 rounded-full mb-6 border text-sm border-primary/35 bg-primary/5 text-primary font-medium">
-          Admin
-        </p>
-      </div>
-
-      <div className="mx-5 max-w-5xl md:mx-auto my-10 mt-6">
-        <img src={data.image} alt={data.title} className="rounded-3xl mb-5" />
-        <div
-          className="rich-text max-w-3xl mx-auto"
-          dangerouslySetInnerHTML={{ __html: data.description }}
-        ></div>
-
-        <div className="mt-14 mb-10 max-w-3xl mx-auto">
-          <p className="font-semibold mb-4">
-            Comments ({comments?.length || 0})
-          </p>
-          <div className="flex flex-col gap-4">
-            {comments?.map((item, index) => (
-              <div
-                key={index}
-                className="relative bg-primary/2 border border-primary/5 max-w-xl p-4 rounded text-gray-600"
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <img src={assets.user_icon} alt="" className="w-6" />
-                  <p className="font-medium">{item.name}</p>
-                </div>
-                <p className="text-sm max-w-md ml-8">{item.content}</p>
-                <div className="absolute bottom-3 right-4 flex items-center gap-2 text-xs">
-                  {Moment(item.createdAt).fromNow()}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="max-w-3xl mx-auto">
-          <p className="font-semibold mb-4">Add your comment</p>
-          <form
-            onSubmit={handleSubmitCommentForm}
-            className="flex flex-col gap-4 items-start max-w-lg"
-          >
-            <input
-              type="text"
-              name="name"
-              id="name"
-              placeholder="Name"
-              requied
-              className="w-full p-2 border border-gray-300 rounded outline-none"
-              value={formDetails.name}
-              onChange={handleInputChange}
-            />
-            <textarea
-              name="comment"
-              id="comment"
-              placeholder="Comment"
-              requied
-              className="w-full p-2 border border-gray-300 rounded outline-none h-48"
-              value={formDetails.comment}
-              onChange={handleInputChange}
-            />
-            <button
-              type="submit"
-              className="bg-primary text-white rounded p-2 px-8 hover:scale-102 transition-all cursor-pointer"
+      {/* Enhanced Header Section */}
+      <article className="px-4 md:px-8 max-w-7xl mx-auto">
+        <header className="text-center mt-24 mb-16">
+          <div className="space-y-6">
+            <p
+              className="inline-block py-1.5 px-4 rounded-full border-2 border-primary/20 
+            bg-primary/5 text-primary font-medium text-sm"
             >
-              Submit
-            </button>
-          </form>
-        </div>
+              Published on {Moment(data.createdAt).format('MMMM Do YYYY')}
+            </p>
 
-        <div className="my-24 max-w-3xl mx-auto">
-          <p className="font-semibold my-4">Share this blog on social media</p>
-          <div className="flex">
-            <img src={assets.facebook_icon} width={50} alt="Facebook" />
-            <img src={assets.twitter_icon} width={50} alt="Twitter" />
-            <img src={assets.googleplus_icon} width={50} alt="Google Plus" />
+            <h1
+              className="text-3xl md:text-5xl font-bold text-gray-800 max-w-4xl mx-auto 
+            leading-tight tracking-tight"
+            >
+              {data.title}
+            </h1>
+
+            <h2 className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto font-medium">
+              {data.subTitle}
+            </h2>
+
+            <div className="flex items-center justify-center gap-2">
+              <img src={assets.user_icon} alt="" className="w-5 h-5" />
+              <span className="text-gray-600">Written by</span>
+              <span className="text-primary font-medium">Admin</span>
+            </div>
           </div>
+        </header>
+
+        {/* Enhanced Content Section */}
+        <div className="max-w-4xl mx-auto mb-24">
+          <div className="relative rounded-2xl overflow-hidden mb-12 shadow-xl">
+            <img
+              src={data.image}
+              alt={data.title}
+              className="w-full aspect-video object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+          </div>
+
+          <div
+            className="rich-text prose prose-lg max-w-none prose-headings:font-semibold 
+          prose-a:text-primary prose-img:rounded-xl prose-strong:text-gray-800"
+            dangerouslySetInnerHTML={{ __html: data.description }}
+          />
+
+          {/* Enhanced Comments Section */}
+          <section className="mt-20 border-t pt-16">
+            <h3 className="text-2xl font-bold text-gray-800 mb-8">
+              Comments ({comments?.length || 0})
+            </h3>
+
+            {/* Enhanced Comment List */}
+            <div className="space-y-6 mb-12">
+              {comments?.length > 0 ? (
+                comments.map((item, index) => (
+                  <div
+                    key={index}
+                    className="bg-blue-50/50 border border-blue-50 rounded-xl p-6 shadow-sm 
+                    hover:shadow-md transition-all duration-300"
+                  >
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="bg-primary/10 p-2.5 rounded-full">
+                        <img
+                          src={assets.user_icon}
+                          alt=""
+                          className="w-5 h-5"
+                        />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-800">
+                          {item.name}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          {Moment(item.createdAt).fromNow()}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-gray-600 pl-12 leading-relaxed">
+                      {item.content}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-8 text-gray-500 bg-white rounded-xl border border-gray-100">
+                  No comments yet. Be the first to comment!
+                </div>
+              )}
+            </div>
+
+            {/* Enhanced Comment Form */}
+            <form
+              onSubmit={handleSubmitCommentForm}
+              className="mt-12 bg-blue-50/50 rounded-xl p-6 border border-blue-100 shadow-sm"
+            >
+              <h3 className="text-xl font-bold text-gray-800 mb-6">
+                Add your comment
+              </h3>
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Your name"
+                  required
+                  value={formDetails.name}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 placeholder:
+                  bg-white/70 focus:border-primary/30 
+                  focus:ring-2 focus:ring-primary/10 outline-none transition-all"
+                />
+                <textarea
+                  name="comment"
+                  placeholder="Your comment"
+                  required
+                  value={formDetails.comment}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 placeholder:
+                  bg-white/70 focus:border-primary/30 
+                  focus:ring-2 focus:ring-primary/10 outline-none transition-all min-h-[160px]"
+                />
+                <button
+                  type="submit"
+                  className="px-8 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 
+                  hover:shadow-lg hover:shadow-primary/20 active:scale-95 transition-all"
+                >
+                  Post Comment
+                </button>
+              </div>
+            </form>
+          </section>
+
+          {/* Enhanced Share Section */}
+          <section className="mt-16 text-center">
+            <h3 className="text-xl font-bold text-gray-800 mb-6">
+              Share this article
+            </h3>
+            <div className="flex items-center justify-center gap-1">
+              {socials.map((social, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleShare(social.name)}
+                  title={`Share on ${social.name}`}
+                  className="p-3 rounded-full hover:bg-gray-100 transition-colors"
+                >
+                  <img
+                    src={social.icon}
+                    alt={social.name}
+                    className="w-12 h-12"
+                  />
+                </button>
+              ))}
+            </div>
+          </section>
         </div>
-      </div>
+      </article>
 
       <Footer />
     </div>

@@ -41,40 +41,55 @@ const BlogList = () => {
   const blogs = filteredBlogs();
 
   return (
-    <div>
+    <div className="py-12 px-4 md:px-8 lg:px-16 mx-auto">
       {blogs.length === 0 ? (
         <NotFoundBlog />
       ) : (
-        <div className="flex justify-center gap-4 md:gap-8 my-10 relative">
-          {blogCategories.map((category) => (
-            <div key={category} className="relative">
-              <button
+        <>
+          {/* Enhanced Category Filter */}
+          <div className="flex flex-wrap justify-center gap-3 md:gap-6 mb-16">
+            {blogCategories.map((category) => (
+              <motion.button
+                key={category}
                 onClick={() => setMenu(category)}
-                className={`cursor-pointer to-gray-500 ${
-                  menu === category ? 'text-white px-4 pt-0.5' : ''
-                }`}
+                className={`px-6 py-2 text-sm md:text-base rounded-full transition-all duration-300 cursor-pointer
+                  ${
+                    menu === category
+                      ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-105'
+                      : 'text-gray-600 hover:bg-gray-100 border border-gray-200'
+                  }`}
+                whileHover={{ scale: menu === category ? 1.05 : 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
                 {category}
-                {menu === category && (
-                  <motion.div
-                    layoutId="underline"
-                    transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                    className="absolute top-0 left-0 right-0 h-7 -z-1 bg-primary rounded-full"
-                  ></motion.div>
-                )}
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
+              </motion.button>
+            ))}
+          </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-24 mx-8 md:mx-16 xl:mx-36">
-        {filteredBlogs()
-          .filter((blog) => (menu === 'All' ? true : blog.category === menu))
-          .map((blog) => (
-            <BlogCard key={blog._id} blog={blog} />
-          ))}
-      </div>
+          {/* Enhanced Blog Grid */}
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            {filteredBlogs()
+              .filter((blog) =>
+                menu === 'All' ? true : blog.category === menu,
+              )
+              .map((blog, index) => (
+                <motion.div
+                  key={blog._id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <BlogCard blog={blog} />
+                </motion.div>
+              ))}
+          </motion.div>
+        </>
+      )}
     </div>
   );
 };

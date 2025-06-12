@@ -5,8 +5,10 @@
  * @copyright 2025 monayem_hossain_limon
  */
 
+// Internal Imports
 import { assets, footer_data } from '../assets/assets';
 
+// Footer
 const Footer = () => {
   return (
     <footer className="px-6 md:px-16 lg:px-24 xl:px-32 bg-primary/3">

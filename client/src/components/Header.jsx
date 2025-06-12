@@ -16,11 +16,13 @@ const Header = () => {
   const { input, setInput } = useAppContext();
   const inputRef = useRef();
 
+  // Handle form submit
   const handleFormSubmit = (e) => {
     e.preventDefault();
     setInput(inputRef?.current?.value);
   };
 
+  // Clear input
   const handleClear = () => {
     setInput('');
     inputRef.current.value = '';
@@ -28,62 +30,102 @@ const Header = () => {
 
   return (
     <div className="mx-8 md:mx-16 relative">
-      <div className="text-center mt-20 mb-8">
-        <div className="inline-flex items-center justify-center gap-4 px-6 py-1.5 mb-4 border border-primary/40 bg-primary/10 rounded-full text-sm text-primary">
-          <p>New: AI feature integrated</p>
-          <img src={assets.star_icon} alt="star" className="w-2.5" />
+      <div className="text-center mt-24 mb-12">
+        {/* Enhanced badge design */}
+        <div className="inline-flex items-center justify-center gap-3 px-6 py-2 mb-6 border-2 border-primary/30 bg-primary/5 rounded-full text-sm font-medium text-primary shadow-lg shadow-primary/10 hover:scale-105 transition-all">
+          <p>New: AI-Powered Blog Generation</p>
+          <img
+            src={assets.star_icon}
+            alt="star"
+            className="w-3 animate-pulse"
+          />
         </div>
-        <h1 className="text-3xl md:text-5xl font-semibold md:leading-16 text-gray-700">
-          Your own <span className="text-primary">AI powered</span> blogging{' '}
-          <br /> platform.
+
+        {/* Enhanced heading with gradient */}
+        <h1 className="text-4xl md:text-6xl font-bold md:leading-tight text-gray-800 mb-6">
+          Your own{' '}
+          <span className="bg-gradient-to-r from-primary to-blue-500 text-transparent bg-clip-text">
+            AI powered
+          </span>{' '}
+          <br className="hidden md:block" />
+          blogging platform
         </h1>
-        <p className="my-6 md:my-8 max-w-2xl mx-auto max-md:text-xs text-gray-500">
+
+        {/* Enhanced subheading */}
+        <p className="my-8 max-w-2xl mx-auto text-base md:text-lg text-gray-600 leading-relaxed">
           Unleash the power of AI-generated content with our cutting-edge
-          platform — effortless blog creation starts here. Focus on your ideas
-          while AI handles the writing, empowering every blogger to thrive.
+          platform. Focus on your ideas while AI handles the writing,
+          <span className="text-primary font-medium">
+            {' '}
+            empowering every blogger to thrive
+          </span>
+          .
         </p>
+
+        {/* Enhanced search form */}
         <form
           onSubmit={handleFormSubmit}
-          className="flex items-center justify-between max-w-lg max-md:scale-75 mx-auto border border-gray-300 rounded-full bg-white overflow-hidden"
+          className="flex flex-col items-center justify-center gap-4 max-w-2xl mx-auto"
         >
-          <input
-            ref={inputRef}
-            type="text"
-            name="search"
-            id="search"
-            placeholder="Search for blogs"
-            required
-            className="w-full pl-4 outline-none"
-          />
-          <button
-            type="submit"
-            className="px-8 py-2 m-1.5 bg-primary text-white rounded-full hover:scale-105 transition-all cursor-pointer"
-          >
-            Search
-          </button>
+          <div className="relative w-full group">
+            <input
+              ref={inputRef}
+              type="text"
+              name="search"
+              id="search"
+              placeholder="Search blogs by title or category..."
+              required
+              className="w-full px-6 py-4 bg-white/80 backdrop-blur-sm border-2 border-gray-200 
+      rounded-full outline-none shadow-lg shadow-primary/5
+      focus:border-primary/30 focus:shadow-primary/10 
+      transition-all duration-300 peer placeholder:text-gray-400"
+            />
+            <button
+              type="submit"
+              className="absolute right-2 top-1/2 -translate-y-1/2 px-8 py-2.5
+      bg-gradient-to-r from-primary to-primary/90 text-white font-medium
+      rounded-full transform transition-all duration-300
+      hover:shadow-lg hover:shadow-primary/20 hover:scale-[1.02]
+      active:scale-[0.98] cursor-pointer"
+            >
+              Search
+              <div
+                className="absolute inset-0 rounded-full bg-white/20 opacity-0 
+      group-hover:opacity-100 transition-opacity duration-300"
+              ></div>
+            </button>
+          </div>
+
+          {/* Enhanced search results display */}
+          {input && (
+            <div className="flex flex-col items-center gap-3 animate-fadeIn mt-4">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-gray-500">Showing results for:</span>
+                <span className="font-semibold text-primary">"{input}"</span>
+              </div>
+              <button
+                onClick={handleClear}
+                className="px-4 py-1.5 text-xs font-medium text-gray-600 
+        border border-gray-300/50 rounded-full bg-white/80
+        hover:bg-gray-50 hover:border-primary/20 hover:text-primary
+        hover:shadow-sm transition-all duration-300
+        active:scale-95 cursor-pointer"
+              >
+                Clear Search
+              </button>
+            </div>
+          )}
         </form>
       </div>
 
-      <div className="flex items-center justify-center gap-2 mb-4">
-        {input && <p className="text-sm text-primary">Search: "{input}"</p>}
+      {/* Enhanced background */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <img
+          src={assets.gradientBackground}
+          alt="background"
+          className="w-full h-full object-cover opacity-40 blur-3xl"
+        />
       </div>
-
-      <div className="text-center">
-        {input && (
-          <button
-            onClick={handleClear}
-            className="border font-light text-xs py-1 px-3 rounded-sm shadow-custom-sm cursor-pointer"
-          >
-            Clear Search
-          </button>
-        )}
-      </div>
-
-      <img
-        src={assets.gradientBackground}
-        alt="background"
-        className="absolute -top-50 -z-1 opacity-50"
-      />
     </div>
   );
 };
